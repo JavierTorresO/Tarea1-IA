@@ -36,16 +36,12 @@ class Agente:
             self.laberinto.mover_muros()
 
     # Verificar si es la salida real
- 
     def en_salida(self):
-        
         return self.posicion == self.laberinto.salida_real #si la posicion del agente es la posicion de la salida real devuelve TRUE, si era salida falsa FALSE
 
 
     # Visualizar laberinto con el agente dentro y actualizar como se va moviendo
- 
     def mostrar_laberinto(self):
-        
         simbolos = { #representaciones
                     self.laberinto.LIBRES: '⬜',
                     self.laberinto.MUROS: '🟥',
@@ -64,7 +60,5 @@ class Agente:
 
 
     # Guardar camino recorrido
-
     def mostrar_camino(self):
-
         print("Camino recorrido:", self.camino)
