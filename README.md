@@ -2,7 +2,7 @@
 Escape del laberinto mutante
 
 
-1️⃣Definir y programar la representación del laberinto
+1️⃣ Laberinto y Agente
 
 
 2️⃣Algoritmo de búsqueda (clásico)
