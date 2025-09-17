@@ -2,7 +2,7 @@
 Escape del laberinto mutante
 
 
-1ero Definir y programar la representación del laberinto
+1️⃣Definir y programar la representación del laberinto
 
 Estructura de datos:
 Usa una matriz N x N 
@@ -29,7 +29,7 @@ Colocar k salidas posibles en coordenadas distintas.
 
 Marcar una como la “real”.
 
-2do Algoritmo de búsqueda (clásico)
+2️⃣Algoritmo de búsqueda (clásico)
 
 Elegir un algoritmo:
 
@@ -43,7 +43,7 @@ Después de cada “turno” o movimiento del agente, actualiza el laberinto (mu
 
 Esto es parecido a un “replanning” cada paso.
 
-3️ro Algoritmo Genético
+3️⃣Algoritmo Genético
 
 Codificación de cromosomas:
 
@@ -79,7 +79,7 @@ Ejecución:
 
 Iterar generaciones hasta encontrar un camino que llegue a la salida real o hasta un número máximo de generaciones.
 
-4️to Comparación y Pruebas
+4️⃣Comparación y Pruebas
 
 Probar varios escenarios:
 
