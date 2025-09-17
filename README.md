@@ -2,10 +2,10 @@
 Escape del laberinto mutante
 
 
-1️⃣ Definir y programar la representación del laberinto
+1ero Definir y programar la representación del laberinto
 
 Estructura de datos:
-Usa una matriz N x N (lista de listas en Python).
+Usa una matriz N x N 
 
 0 = celda libre
 
@@ -17,19 +17,19 @@ E = salida(s)
 
 Muros móviles:
 
-Crea una lista de coordenadas de muros móviles.
+Crear una lista de coordenadas de muros móviles.
 
 En cada turno, para cada muro móvil, con probabilidad p mueve el muro a una celda adyacente libre o lo deja donde está.
 
-Así simulas el dinamismo del laberinto.
+Para simular el dinamismo del laberinto.
 
 Salidas:
 
-Coloca k salidas posibles en coordenadas distintas.
+Colocar k salidas posibles en coordenadas distintas.
 
-Marca una como la “real” (puedes tener un atributo exit_real con la coordenada).
+Marcar una como la “real”.
 
-2️⃣ Parte A – Algoritmo de búsqueda (clásico)
+2do Algoritmo de búsqueda (clásico)
 
 Elegir un algoritmo:
 
@@ -43,7 +43,7 @@ Después de cada “turno” o movimiento del agente, actualiza el laberinto (mu
 
 Esto es parecido a un “replanning” cada paso.
 
-3️⃣ Parte B – Algoritmo Genético
+3️ro Algoritmo Genético
 
 Codificación de cromosomas:
 
@@ -79,9 +79,9 @@ Ejecución:
 
 Iterar generaciones hasta encontrar un camino que llegue a la salida real o hasta un número máximo de generaciones.
 
-4️⃣ Parte C – Comparación
+4️to Comparación y Pruebas
 
-Crea varios escenarios:
+Probar varios escenarios:
 
 Laberintos pequeños (5x5, 10x10).
 
@@ -89,7 +89,7 @@ Laberintos grandes (20x20, 30x30).
 
 Baja y alta probabilidad de movimiento de muros.
 
-Mide:
+Medir:
 
 Calidad: ¿llegó a la salida real? ¿camino más corto?
 
@@ -97,4 +97,4 @@ Robustez: ¿funciona cuando cambian los muros?
 
 Tiempo: mide time.perf_counter() antes y después de cada algoritmo.
 
-Presenta resultados en una tabla comparativa.
+Poner resultados en una tabla comparativa.
