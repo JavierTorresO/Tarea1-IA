@@ -1,10 +1,11 @@
 import random
 
 class Laberinto:
-    LIBRES = 0    # casillas libres, por aqui se puede mover el agente
-    MUROS = 1    # muros
+    LIBRES = 0          # casillas libres, por aqui se puede mover el agente
+    MUROS = 1           # muros
     PUNTO_PARTIDA = 2   # donde inicia, solo un punto de partida en todo el laberinto
-    SALIDAS = 3    # salidas (falsas y la real)
+    SALIDAS = 3         # salidas (falsas y la real)
+    LLAVE = 4           # llave que recoger para poder abrir la salida
 
     def __init__(self, n, prob_muro=0.0, radio_seguro=1):
         """
@@ -18,6 +19,7 @@ class Laberinto:
         self.inicio = None
         self.salidas = []
         self.salida_real = None
+        self.llave = None
 
         if prob_muro > 0:
             self.generar_muros_aleatorios(prob_muro, radio_seguro)
@@ -99,11 +101,25 @@ class Laberinto:
                         self.grid[f][c] = self.LIBRES
                         break
 
+    # IDEA EXTRA: poner una llave en el mapa, se debe recoger antes de probar las salidas        
+                 
+    def colocar_llave(self):
+        encontrado = False
+        while not encontrado:
+            f = random.randint(0, self.n - 1)
+            c = random.randint(0, self.n - 1)
+            if self.grid[f][c] == self.LIBRES and (f, c) != self.inicio and (f, c) not in self.salidas:
+                self.grid[f][c] = self.LLAVE
+                self.llave = (f, c)
+                encontrado = True
+
+
     # Visualización del laberinto
 
     def mostrar(self):
         simbolos = {self.LIBRES: '⬜', self.MUROS: '🟥',
-                    self.PUNTO_PARTIDA: '🟢', self.SALIDAS: '🏁'}
+                    self.PUNTO_PARTIDA: '🟢', self.SALIDAS: '🚪',
+                    self.LLAVE: '🔑'}
         for fila in self.grid:
             print(' '.join(simbolos[val] for val in fila))
         print()

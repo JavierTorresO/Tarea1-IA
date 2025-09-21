@@ -1,9 +1,10 @@
 class Agente:
     
     def __init__(self, laberinto):
-        self.laberinto = laberinto  # referencia al laberinto
+        self.laberinto = laberinto        # referencia al laberinto
         self.posicion = laberinto.inicio  # inicia en la posición inicial
-        self.camino = [self.posicion]  # para guardar el camino recorrido
+        self.camino = [self.posicion]     # para guardar el camino recorrido
+        self.tiene_llave = False          # para saber si se recogio la llave o no
 
     # Métodos de movimiento
 
@@ -35,10 +36,33 @@ class Agente:
             self.camino.append(self.posicion)
             self.laberinto.mover_muros()
 
-    # Verificar si es la salida real
-    def en_salida(self):
-        return self.posicion == self.laberinto.salida_real #si la posicion del agente es la posicion de la salida real devuelve TRUE, si era salida falsa FALSE
+    # NUEVO: Manejar tema de la llave y comprobación de salidas
 
+    def verificar_llave_y_salida(self):
+        f, c = self.posicion
+        celda = self.laberinto.grid[f][c]
+
+        # recoger llave si está en esa celda
+        if celda == self.laberinto.LLAVE:
+            self.tiene_llave = True
+            self.laberinto.grid[f][c] = self.laberinto.LIBRES
+            print("¡Has recogido la llave!")
+
+        # intentar entrar a una salida...
+        if celda == self.laberinto.SALIDAS:
+            if not self.tiene_llave: # pero no se recogio la llave previamente
+                print("Necesitas la llave para entrar a una salida 🔑")
+                return False
+            
+            elif (f, c) != self.laberinto.salida_real: # recogiste la llave, intentaste salir pero la salida era falsa
+                print("Ups, la salida era falsa. Sigue buscando...")
+                return False
+            
+            else:
+                print("¡Llegaste a la salida real!") #recogiste la llave, intentaste salir y si era la salida real!
+                return True
+
+        return False  # no es salida
 
     # Visualizar laberinto con el agente dentro y actualizar como se va moviendo
     def mostrar_laberinto(self):
@@ -46,7 +70,8 @@ class Agente:
                     self.laberinto.LIBRES: '⬜',
                     self.laberinto.MUROS: '🟥',
                     self.laberinto.PUNTO_PARTIDA: '🟢',
-                    self.laberinto.SALIDAS: '🏁'
+                    self.laberinto.SALIDAS: '🚪',   
+                    self.laberinto.LLAVE: '🔑'
                     }
         for f in range(self.laberinto.n):
             fila = ""

@@ -5,20 +5,24 @@ from agente import Agente
 lab = Laberinto(15, prob_muro=0.2)
 lab.colocar_inicio(0, 0)
 lab.generar_salidas_aleatorias(min_salidas=2, max_salidas=5)
+lab.colocar_llave()
 agente = Agente(lab)
 
 
 # Una prueba rapida interactiva para probar que el agente se puede mover y reconoce la salida real
 
 print("Controla al agente con w(up), s(down), a(left), d(right). q para salir.")
+
+# estas3 impresiones no van en el juego final, son para tema de pruebas solamente
 print(f"Salidas generadas: {lab.salidas}")
-print(f"Salida real: {lab.salida_real}\n")
+print(f"Salida real: {lab.salida_real}\n") 
+print(f"Llave ubicada en: {lab.llave}\n")
 
 while True:
     agente.mostrar_laberinto()
 
-    if agente.en_salida():
-        print("¡Llegaste a la salida real! 🎉")
+    # Verifica si encontró la llave y llegó a la salida correcta
+    if agente.verificar_llave_y_salida():
         break
 
     comando = input("Mover: ").lower()
