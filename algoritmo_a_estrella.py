@@ -46,3 +46,16 @@ def a_estrella(laberinto, inicio, objetivo):
                     nodo_anterior[vecino] = actual #guardaar por donde llegamos al vecino
 
     return None  # no se encontro camino
+
+def a_estrella_con_llave(laberinto):
+    #Devuelve el camino inicio→llave→salida_real, o None si no hay camino
+    
+    camino_a_llave = a_estrella(laberinto, laberinto.inicio, laberinto.llave)
+    if camino_a_llave is None:
+        return None
+
+    camino_a_salida = a_estrella(laberinto, laberinto.llave, laberinto.salida_real)
+    if camino_a_salida is None:
+        return None
+
+    return camino_a_llave + camino_a_salida[1:]

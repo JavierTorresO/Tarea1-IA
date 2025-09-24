@@ -13,7 +13,7 @@ agente = Agente(lab)
 
 print("Controla al agente con w(up), s(down), a(left), d(right). q para salir.")
 
-# estas3 impresiones no van en el juego final, son para tema de pruebas solamente
+# estas 3 impresiones no van en el juego final, son para tema de pruebas solamente
 print(f"Salidas generadas: {lab.salidas}")
 print(f"Salida real: {lab.salida_real}\n") 
 print(f"Llave ubicada en: {lab.llave}\n")

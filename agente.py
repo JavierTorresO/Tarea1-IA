@@ -42,27 +42,26 @@ class Agente:
         f, c = self.posicion
         celda = self.laberinto.grid[f][c]
 
-        # recoger llave si está en esa celda
+        # recoger la llave si está en la celda
         if celda == self.laberinto.LLAVE:
-            self.tiene_llave = True
-            self.laberinto.grid[f][c] = self.laberinto.LIBRES
-            print("¡Has recogido la llave!")
+            self.tiene_llave = True                            # marca que el agente tiene la llave
+            self.laberinto.grid[f][c] = self.laberinto.LIBRES  # borramos la llave del mapa
+            print("¡Llave recogida! 🔑")
 
-        # intentar entrar a una salida...
+        # intentar entrar a una salida
         if celda == self.laberinto.SALIDAS:
-            if not self.tiene_llave: # pero no se recogio la llave previamente
+            if not self.tiene_llave:  # si no se recogió la llave
                 print("Necesitas la llave para entrar a una salida 🔑")
                 return False
-            
-            elif (f, c) != self.laberinto.salida_real: # recogiste la llave, intentaste salir pero la salida era falsa
+            elif (f, c) != self.laberinto.salida_real:  # la salida es falsa
                 print("Ups, la salida era falsa. Sigue buscando...")
                 return False
-            
-            else:
-                print("¡Llegaste a la salida real!") #recogiste la llave, intentaste salir y si era la salida real!
+            else:  # recogió la llave y llegó a la salida real
+                print("¡Llegaste a la salida real! 🎉")
                 return True
 
         return False  # no es salida
+
 
     # Visualizar laberinto con el agente dentro y actualizar como se va moviendo
     def mostrar_laberinto(self):
