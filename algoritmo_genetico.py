@@ -79,19 +79,28 @@ class AlgoritmoGenetico:
                 if self.laberinto.grid[fila_actual][col_actual] == self.laberinto.LLAVE:
                     tiene_llave = True
                 
-                # si llega a la salida
+                # si llega a una salida
                 if self.laberinto.grid[fila_actual][col_actual] == self.laberinto.SALIDAS:
-                    # verificar que es el objetivo salida real y tiene llave
-                    if (fila_actual, col_actual) == self.laberinto.salida_real and tiene_llave:
-                        return {
-                            'posicion_final': (fila_actual, col_actual),
-                            'tiene_llave': tiene_llave,
-                            'salida_real': True,
-                            'movimientos_exitosos': movimientos_exitosos,
-                            'camino': posiciones_visitadas
-                        }
+                    # si es real
+                    if (fila_actual, col_actual) == self.laberinto.salida_real:
+                        if tiene_llave:
+                        
+                            return {
+                                'posicion_final': (fila_actual, col_actual),
+                                'tiene_llave': tiene_llave,
+                                'salida_real': True,
+                                'movimientos_exitosos': movimientos_exitosos + 10,  # Bonus extra por éxito
+                                'camino': posiciones_visitadas
+                            }
+                        else:
+                            # ecnontro la salida pero sin la llave
+                            movimientos_exitosos += 5  # bonus por encontrar la salida real
+                    else:
+                        # intento salida falsa
+                        if tiene_llave:
+                            movimientos_exitosos -= 2  # Penalización por probar salida falsa con llave
         
-        # si no llega a la salida real
+        # no llego a la salida real o no tenia la llave
         return {
             'posicion_final': (fila_actual, col_actual),
             'tiene_llave': tiene_llave,
@@ -100,21 +109,112 @@ class AlgoritmoGenetico:
             'camino': posiciones_visitadas
         }
 
-#revisar
     def mutar_cromosoma(self, cromosoma):
         cromosoma_mutado = cromosoma.copy()
         movimientos_posibles = ['ARRIBA', 'ABAJO', 'IZQUIERDA', 'DERECHA']
         
-        # Revisar cada gen del cromosoma
+        # para mutacion 1: cambiar los movimientos existentes
         for i in range(len(cromosoma_mutado)):
-            # si se puede mutar ese gen
             if random.random() < self.prob_mutacion:
-                cromosoma_mutado[i] = random.choice(movimientos_posibles)
+                # evitar seleccionar el mismo movimiento
+                movimientos_disponibles = [m for m in movimientos_posibles if m != cromosoma_mutado[i]]
+                cromosoma_mutado[i] = random.choice(movimientos_disponibles)
+
+        # para mutacion 2: agregar un nuevo movimiento con prob de 20%
+        if random.random() < 0.2 and len(cromosoma_mutado) < self.longitud_cromosoma:
+            posicion = random.randint(0, len(cromosoma_mutado))
+            cromosoma_mutado.insert(posicion, random.choice(movimientos_posibles))
+
+        # para mutacion 3: eliminar un movimiento con prob de 20% (NOTA: probrar estos porcentajes a ver si son validos para el problema)
+        if random.random() < 0.2 and len(cromosoma_mutado) > 10: #mantiene un min de 10 movimientos
+            posicion = random.randint(0, len(cromosoma_mutado) -  1)
+            cromosoma_mutado.pop(posicion)
+
         return cromosoma_mutado
 
-    #def calcular_fitness(self, cromosoma):
+    def calcular_fitness(self, cromosoma):
+        resultado = self.simular_cromosoma(cromosoma)
+        fitness = 0
 
-    #def elegir_padre(self):
+        #bonificacion por los movimientos exitosos
+        fitness += resultado['movimientos_exitosos']
+
+        #bonificacion por obtener la llave
+        if resultado['tiene_llave']:
+            fitness += 500
+
+        #bonificaion por llegar a la salida real
+        if resultado['salida_real']:
+            fitness += 1000
+
+        #penalizacion por longitud excesiva
+        fitness -= len(cromosoma) * 0.1
+
+        #calcular la distancia a objetivos
+        pos_final = resultado['posicion_final'] ##revisar
+
+        # si no tiene llave, considerar la distancia a la llave
+        if not resultado['tiene_llave']:
+            dist_llave = abs(pos_final[0] - self.laberinto.llave[0]) + abs(pos_final[1] - self.laberinto.llave[1])
+            fitness -= dist_llave * 2
+
+        #si tiene la llave pero no llego a la salida, considerar la distancia a la salida real
+        elif not resultado['salida_real']:
+            dist_salida = abs(pos_final[0] - self.laberinto.salida_real[0]) + abs(pos_final[1] - self.laberinto.salida_real[1])
+            fitness -= dist_salida * 2
+
+        return fitness
+
+    def elegir_padre(self):
+        idx1 = random.randint(0, len(self.poblacion) - 1)
+        idx2 = random.randint(0, len(self.poblacion) - 1)
+
+        fitness1 = self.calcular_fitness(self.poblacion[idx1])
+        fitness2 = self.calcular_fitness(self.poblacion[idx2])
+
+        return self.poblacion[idx1] if fitness1 > fitness2 else self.poblacion[idx2]
+
+    def cruzar_cromosomas(self, padre1, padre2):
+        if random.random() > self.prob_cruce:
+            return padre1.copy()
         
+        #cruce en un punto
+        punto = random.randint(1, min(len(padre1), len(padre2)) - 1)
+        hijo = padre1[:punto] + padre2[punto:]
+        return hijo
+    
+    def evolucionar(self):
+        #crear poblacion inicial
+        self.crear_poblacion_inicial()
 
-    #def cruzar_cromosomas(self, padre1, padre2):
+        for generacion in range(self.generaciones):
+            #evaluar pob actual
+            fitness_actual = [self.calcular_fitness(c) for c in self.poblacion]
+
+            #actualizar la mejor solucion encontrada
+            max_fitness = max(fitness_actual)
+            if max_fitness > self.mejor_fitness:
+                self.mejor_fitness = max_fitness
+                self.mejor_cromosoma = self.poblacion[fitness_actual.index(max_fitness)]
+
+            self.fitness_por_generacion.append(max_fitness)
+
+            #crar nueva poblacion
+            nueva_poblacion = []
+
+            while len(nueva_poblacion) < self.tam_poblacion:
+                #selecion
+                padre1 = self.elegir_padre()
+                padre2 = self.elegir_padre()
+
+                #cruce
+                hijo = self.cruzar_cromosomas(padre1, padre2)
+
+                #mutacion
+                hijo = self.mutar_cromosoma(hijo)
+
+                nueva_poblacion.append(hijo)
+
+            self.poblacion = nueva_poblacion
+
+        return self.mejor_cromosoma, self.mejor_fitness, self.fitness_por_generacion
