@@ -44,4 +44,4 @@ def correr_prueba(prob_muro, tam, repeticiones=20, delay=0.0):
 
 if __name__ == "__main__":
     # Cambiar los valores para cada prueba que se haga (mantener el delay si siempre)
-    correr_prueba(prob_muro=0.2, tam=10, repeticiones=20, delay=0.0)
+    correr_prueba(prob_muro=0.9, tam=70, repeticiones=20, delay=0.0)
