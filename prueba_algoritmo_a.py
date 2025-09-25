@@ -14,8 +14,12 @@ print("Laberinto inicial:")
 agente.mostrar_laberinto()
 
 inicio=time.time()
-# Ejecutar A* considerando la llave y las salidas falsas
-a_estrella_con_llave(lab, agente, delay=0.5)
+pasos = a_estrella_con_llave(lab, agente, delay=0.5)
 fin=time.time()
+if pasos is not None:
+    print(f"\nJuego completado en {pasos} pasos.")
+else:
+    print("\nEl agente no pudo completar el laberinto (bloqueado).")
+
 print(f"Tiempo de ejecución: {fin - inicio:.4f} segundos")
 # si está demorando mucho cortar la terminal a la fuerza: ctrl+c

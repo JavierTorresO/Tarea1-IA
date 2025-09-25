@@ -76,6 +76,8 @@ def a_estrella_con_llave(laberinto, agente, delay=0.3):
                     unico bloqueo posible: si al moverse el Agente se mueven los muros y lo dejan rodeado de muros y no pueda moverse a ningun lado
     """
 
+    pasos_totales = 0
+
     # 1. Ir a la llave
     while not agente.tiene_llave:
         camino = a_estrella(laberinto, agente.posicion, laberinto.llave)
@@ -83,9 +85,11 @@ def a_estrella_con_llave(laberinto, agente, delay=0.3):
             pudo_mover = mover_aleatoriamente(laberinto, agente, delay)
             if not pudo_mover:
                 print("El Agente fue rodeado por los muros, no se puede mover.\nFIN DEL JUEGO.")
-                return
+                return None
             else:
-                print("No se observa ningún camino posible hasta la llave... Caminaré un poco por si se mueven los muros...\n")
+                print("No se observa ningún camino posible hasta la llave... "
+                      "Caminaré un poco por si se mueven los muros...\n")
+            pasos_totales += 1 
             continue
 
         siguiente_paso = camino[1]
@@ -93,6 +97,7 @@ def a_estrella_con_llave(laberinto, agente, delay=0.3):
         agente.verificar_llave_y_salida()
         laberinto.mover_muros()
         agente.mostrar_laberinto()
+        pasos_totales += 1
         time.sleep(delay)
 
     # 2. Ir a las salidas, de la más cercana a la más lejana
@@ -106,18 +111,22 @@ def a_estrella_con_llave(laberinto, agente, delay=0.3):
                 pudo_mover = mover_aleatoriamente(laberinto, agente, delay)
                 if not pudo_mover:
                     print("El Agente fue rodeado por los muros, no se puede mover.\nFIN DEL JUEGO.")
-                    return
+                    return None
                 else:
-                    print("No se observa ningún camino posible hasta la siguiente salida... Caminaré un poco por si se mueven los muros...\n")
+                    print("No se observa ningún camino posible hasta la siguiente salida... "
+                          "Caminaré un poco por si se mueven los muros...\n")
+                pasos_totales += 1
                 continue
 
             siguiente_paso = camino[1]
             agente.posicion = siguiente_paso
             if agente.verificar_llave_y_salida():
                 salida_encontrada = True
+                pasos_totales += 1
                 break
             laberinto.mover_muros()
             agente.mostrar_laberinto()
+            pasos_totales += 1
             time.sleep(delay)
 
         if salida_encontrada:
@@ -125,3 +134,6 @@ def a_estrella_con_llave(laberinto, agente, delay=0.3):
 
     if not salida_encontrada:
         print("No se encontró la salida real después de probar todas las salidas.")
+        return None
+
+    return pasos_totales
