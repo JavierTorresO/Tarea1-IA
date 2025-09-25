@@ -144,12 +144,19 @@ class AlgoritmoGenetico:
             fitness += 1000
 
         # penalizacion por longitud excesiva
-        fitness -= len(cromosoma) * 0.1
+        #fitness -= len(cromosoma) * 0.1
+        fitness -= len(cromosoma) * 2 #prueba de penalizacion mayor
 
         # calcular la distancia a la salida real
         pos_final = resultado['posicion_final']
         dist_salida = abs(pos_final[0] - self.laberinto.salida_real[0]) + abs(pos_final[1] - self.laberinto.salida_real[1])
         fitness -= dist_salida * 2 
+
+
+        if resultado['salida_real']:
+            fitness += 500  # bonus extra por llegar a la salida real
+            if len(cromosoma) <= 30:
+                fitness += 200  
 
         # penalizacion por no tener la llave
         if not resultado['tiene_llave']:
