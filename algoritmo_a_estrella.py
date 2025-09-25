@@ -1,4 +1,5 @@
 from queue import PriorityQueue
+import time
 
 def heuristica(fila, columna):
     # distancia Manhattan como heuristica
@@ -47,15 +48,58 @@ def a_estrella(laberinto, inicio, objetivo):
 
     return None  # no se encontro camino
 
-def a_estrella_con_llave(laberinto):
-    #Devuelve el camino inicio→llave→salida_real, o None si no hay camino
+
+def a_estrella_con_llave(laberinto, agente, delay=0.3):
+    """
+    Se cambio a un 'A* incremental'
+    -con cada paso que hace el agente se recalcula el camino->antes al calcular el camino desde el inicio daba problemas porque el mapa se iba modificando(muros moviles) y podia dar problemas.
+        Sentiamos que el agente 'no aprendía'
+    -no servian de nada las salidas falsas si le damos la salida_real para calcular el camino, entonces una vez llega a la llave va a probar todas las salidas por cercania desde ese punto hasta llegar a la real
+    """
+
+    # 1. Ir a la llave
+    while not agente.tiene_llave:
+        # recalcular el camino desde la posición actual hasta la llave
+        camino = a_estrella(laberinto, agente.posicion, laberinto.llave)
+        if camino is None:
+            print("No se puede llegar a la llave. Laberinto bloqueado.")
+            return
+        
+        # moverse paso a paso (solo un paso por iteración)
+        siguiente_paso = camino[1]
+        agente.posicion = siguiente_paso
+        laberinto.mover_muros()
+        agente.verificar_llave_y_salida()  # recoger llave si corresponde
+        agente.mostrar_laberinto()
+        time.sleep(delay)
+
+    # 2. Ir a las salidas, de la más cercana a la más lejana
+    salidas_ordenadas = sorted(laberinto.salidas,
+                               key=lambda x: heuristica(agente.posicion, x))
     
-    camino_a_llave = a_estrella(laberinto, laberinto.inicio, laberinto.llave)
-    if camino_a_llave is None:
-        return None
+    salida_encontrada = False
+    for salida in salidas_ordenadas:
+        while agente.posicion != salida:
+            # recalcular camino paso a paso desde la posición actual hasta esta salida
+            camino = a_estrella(laberinto, agente.posicion, salida)
+            if camino is None:
+                print(f"No se puede llegar a la salida {salida}. Laberinto bloqueado.")
+                break
 
-    camino_a_salida = a_estrella(laberinto, laberinto.llave, laberinto.salida_real)
-    if camino_a_salida is None:
-        return None
+            # moverse paso a paso
+            siguiente_paso = camino[1]
+            agente.posicion = siguiente_paso
+            laberinto.mover_muros()
+            # verificar si es salida y si tiene llave
+            if agente.verificar_llave_y_salida():
+                salida_encontrada = True
+                break
 
-    return camino_a_llave + camino_a_salida[1:]
+            agente.mostrar_laberinto()
+            time.sleep(delay)
+        
+        if salida_encontrada:
+            break
+
+    if not salida_encontrada:
+        print("No se encontró la salida real después de probar todas las salidas.")
