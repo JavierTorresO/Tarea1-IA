@@ -1,5 +1,6 @@
 import random
 import math
+from algoritmo_a_estrella import a_estrella
 
 class AlgoritmoGenetico:
     def __init__(self, laberinto):
@@ -25,15 +26,33 @@ class AlgoritmoGenetico:
         for i in range(longitud):
             movimiento = random.choice(movimientos_posibles)
             cromosoma.append(movimiento)
-        
         return cromosoma
+
+    def convertir_camino_a_movimientos(self, camino):
+        movimientos = []
+        for (f1, c1), (f2, c2) in zip(camino, camino[1:]):
+            if f2 == f1 - 1: movimientos.append('ARRIBA')
+            elif f2 == f1 + 1: movimientos.append('ABAJO')
+            elif c2 == c1 - 1: movimientos.append('IZQUIERDA')
+            elif c2 == c1 + 1: movimientos.append('DERECHA')
+        return movimientos
+
 
     def crear_poblacion_inicial(self):
         self.poblacion = []
-        for i in range(self.tam_poblacion):
-            cromosoma = self.crear_cromosoma_aleatorio()
-            self.poblacion.append(cromosoma)
-        
+
+        #Añadir algunos cromosomas utilizando  A*
+        camino_llave = a_estrella(self.laberinto, self.laberinto.inicio, self.laberinto.llave)
+        if camino_llave:
+            camino_salida = a_estrella(self.laberinto, self.laberinto.llave, self.laberinto.salida_real)
+            if camino_salida:
+                # Convertir el camino en movimientos (ARRIBA, ABAJO, etc.)
+                cromosoma_astar = self.convertir_camino_a_movimientos(camino_llave + camino_salida[1:])
+                self.poblacion.append(cromosoma_astar)
+
+        #rellenar el resto con cromosomas aleatorios
+        while len(self.poblacion) < self.tam_poblacion:
+            self.poblacion.append(self.crear_cromosoma_aleatorio())
 
     def simular_cromosoma(self, cromosoma):
         fila_actual = self.laberinto.inicio[0]
@@ -97,28 +116,43 @@ class AlgoritmoGenetico:
 
 
     def mutar_cromosoma(self, cromosoma):
-        cromosoma_mutado = cromosoma.copy()
-        movimientos_posibles = ['ARRIBA', 'ABAJO', 'IZQUIERDA', 'DERECHA']
-        
-        # cambiar movimientos existentes
-        for i in range(len(cromosoma_mutado)):
-            if random.random() < self.prob_mutacion:
-                movimientos_disponibles = [m for m in movimientos_posibles if m != cromosoma_mutado[i]]
-                
-                # si el agente esta cerca, se le ayuda para la salida
-                if i == len(cromosoma_mutado) - 1:
-                    movimientos_disponibles = ['ARRIBA', 'ABAJO', 'IZQUIERDA', 'DERECHA']
-                
-                cromosoma_mutado[i] = random.choice(movimientos_disponibles)
+        if random.random() < self.prob_mutacion:
+            i = random.randrange(len(cromosoma))
+            movimientos_posibles = ['ARRIBA', 'ABAJO', 'IZQUIERDA', 'DERECHA']
+            cromosoma[i] = random.choice(movimientos_posibles)
 
-        if random.random() < 0.2 and len(cromosoma_mutado) < self.longitud_cromosoma:
-            cromosoma_mutado.append(random.choice(movimientos_posibles))
+        # chance extra de usar A* para reparar
+        if random.random() < 0.05:
+            resultado = self.simular_cromosoma(cromosoma)
+            pos_final = resultado['posicion_final']
+            camino = a_estrella(self.laberinto, pos_final, self.laberinto.salida_real)
+            if camino:
+                extra = self.convertir_camino_a_movimientos(camino[1:])
+                cromosoma.extend(extra)
 
-        if random.random() < 0.2 and len(cromosoma_mutado) > 10:
-            cromosoma_mutado.pop(random.randint(0, len(cromosoma_mutado) - 1))
+        # asegurar que queda valido
+        cromosoma = self.reparar_cromosoma(cromosoma)
+        return cromosoma
 
-        return cromosoma_mutado
 
+    def cruzar_cromosomas(self, padre1, padre2):
+        longitud = min(len(padre1), len(padre2))
+        punto = random.randint(1, longitud - 1)
+        hijo = padre1[:punto] + padre2[punto:]
+
+        # reparar después de cruce
+        hijo = self.reparar_cromosoma(hijo)
+        return hijo
+
+
+    def reparar_cromosoma(self, cromosoma):
+        cromosoma = [m for m in cromosoma if m in ['ARRIBA', 'ABAJO', 'IZQUIERDA', 'DERECHA']]
+        if not cromosoma:
+            return self.crear_cromosoma_aleatorio()
+        if len(cromosoma) > self.longitud_cromosoma:
+            cromosoma = cromosoma[:self.longitud_cromosoma]
+
+        return cromosoma
     
     def expandir_cromosoma(self, cromosoma):
         # si el cromosoma no ha encontrado la salida despues de unos intentos, se expande
@@ -126,8 +160,8 @@ class AlgoritmoGenetico:
             movimientos_posibles = ['ARRIBA', 'ABAJO', 'IZQUIERDA', 'DERECHA']
             cromosoma.append(random.choice(movimientos_posibles))
         return cromosoma
-
-
+    
+   
     def calcular_fitness(self, cromosoma):
         resultado = self.simular_cromosoma(cromosoma)
         fitness = 0
@@ -165,13 +199,12 @@ class AlgoritmoGenetico:
 
         return fitness
 
-    
+    '''
     def seleccionar_por_torneo(self, torneo_tamaño=3):
         # elegimos al mejor
         torneo = random.sample(self.poblacion, torneo_tamaño)
         mejor_individuo = max(torneo, key=self.calcular_fitness)
-        return mejor_individuo
-
+        return mejor_individuo'''
 
     def seleccionar_padres(self):
         # seleccion por torneo
@@ -183,15 +216,6 @@ class AlgoritmoGenetico:
         padre1 = torneo()
         padre2 = torneo()
         return padre1, padre2
-
-    def cruzar_cromosomas(self, padre1, padre2):
-        longitud = min(len(padre1), len(padre2))
-        punto = random.randint(1, longitud - 1)  #elegir un punto de cruce
-
-        hijo = padre1[:punto] + padre2[punto:]
-        return hijo
-
-
     
     def evolucionar(self):
         self.crear_poblacion_inicial()
