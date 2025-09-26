@@ -30,7 +30,6 @@ def correr_prueba_genetico(prob_muro, tam, repeticiones=20, delay=0.0):
         tiempos.append(duracion)
         fitness_lista.append(mejor_fitness)
      
-
         # evaluar si la mejor solución realmente salió
         resultado = lab.grid  # para referencia
         sim = ag.simular_cromosoma(mejor_cromosoma)
@@ -53,4 +52,4 @@ def correr_prueba_genetico(prob_muro, tam, repeticiones=20, delay=0.0):
     print(f"Fitness promedio: {prom_fitness:.1f}")
 
 if __name__ == "__main__":
-    correr_prueba_genetico(prob_muro=0.1, tam=8, repeticiones=20, delay=0.0)
+    correr_prueba_genetico(prob_muro=0.8, tam=30, repeticiones=20, delay=0.0)

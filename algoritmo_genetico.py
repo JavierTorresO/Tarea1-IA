@@ -5,11 +5,11 @@ class AlgoritmoGenetico:
     def __init__(self, laberinto):
         self.laberinto = laberinto
         # param del algoritmo
-        self.tam_poblacion = 50          # tamaño de la poblacion
-        self.longitud_cromosoma = 100    # longitud maxima de cada cromosoma
+        self.tam_poblacion = 100          # tamaño de la poblacion
+        self.longitud_cromosoma = 200    # longitud maxima de cada cromosoma
         self.prob_mutacion = 0.3         # probabilidad de mutacion (30%)
         self.prob_cruce = 0.8            # probabilidad de cruce (80%)
-        self.generaciones = 100          # numero maximo de generaciones
+        self.generaciones = 250          # numero maximo de generaciones
         self.tam_torneo = 3              # tamaño del torneo para seleccion
         
         self.poblacion = []
