@@ -3,12 +3,12 @@
 Se mplementó un laberinto donde un agente inteligente debe encontrar la salida sorteando muros y recogiendo una llave. 
 Incluye distintos modos: control manual, búsqueda A* y búsqueda mediante algoritmo genético.  
 
-## 🎮 Elementos del juego  
+## Elementos del juego  
 
 | Emoji | Significado |
 |-------|-------------|
-| ⬜ | Casilla libre |
-| 🟥 | Muro |
+| ⬜ | Casillas libres |
+| 🟥 | Muros |
 | 🤖 | Agente |
 | 🔑 | Llave |
 | 🚪 | Salidas |
@@ -54,13 +54,14 @@ Incluye distintos modos: control manual, búsqueda A* y búsqueda mediante algor
 
    Aunque en nuestras pruebas estos parametros se mantuvieron en los valores por defecto, si se quiere se pueden modificar dentro del codigo:
    
-    -##Punto de inicio del agente en celda (0, 0).## -> según el modo que se eligió hay que identificar el comando "lab.colocar_inicio(0, 0)" y poner otras coordenadas
+    -*Punto de inicio del agente en celda (0, 0).* -> según el modo que se eligió hay que identificar el comando "lab.colocar_inicio(0, 0)" y poner otras coordenadas
 
-    -##Número mínimo y máximo de salidas generadas en el laberinto (2 y 5).## -> según el modo que se eligió hay que identificar el comando "lab.generar_salidas_aleatorias(min_salidas=2, max_salidas=5)" y poner otros valores para esa prueba
+    -*Número mínimo y máximo de salidas generadas en el laberinto (2 y 5).* -> según el modo que se eligió hay que identificar el comando "lab.generar_salidas_aleatorias(min_salidas=2, max_salidas=5)" y poner otros valores para esa prueba
 
 
-    -##Probabilidad de que se muevan los muros en el laberinto está en 0.2.## -> en el archivo "laberinto.py" ir a la función "mover_muros(self, prob_mover)" y cambiar el valor de 'prob_mover'
+    -*Probabilidad de que se muevan los muros en el laberinto está en 0.2.* -> en el archivo "laberinto.py" ir a la función "mover_muros(self, prob_mover)" y cambiar el valor de 'prob_mover'
 
-    -##Radio seguro en la generación inicial del laberinto fue 1 (garantiza un área libre alrededor del inicio).## ->en el archivo "laberinto.py" ir a la función "generar_muros_aleatorios(self,probabilidad,radio_seguro)" y cambiar el valor de 'radio_seguro'    
-    La generación de llaves y salidas siempre fue aleatoria. 
+    -*Radio seguro en la generación inicial del laberinto fue 1 (garantiza un área libre alrededor del inicio).* ->en el archivo "laberinto.py" ir a la función "generar_muros_aleatorios(self,probabilidad,radio_seguro)" y cambiar el valor de 'radio_seguro'
+       
+    -*La generación de llaves y salidas siempre fue aleatoria.*
    
