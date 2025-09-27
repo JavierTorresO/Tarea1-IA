@@ -37,6 +37,9 @@ Incluye distintos modos: control manual, búsqueda A* y búsqueda mediante algor
    ```bash
    git clone https://github.com/JavierTorresO/Tarea1-IA.git
    cd Tarea1-IA
+
+⚠️ IMPORTANTE: la versión completa y lista para probar está en la rama 'idea_llave', la dejamos como rama default al clonar el repositorio pero igual queriamos hacer la explicación por si pensaba en cambiarse a la rama 'main' (comunmente se llama así la rama principal) para correr el codigo
+
 2. **Ejecuta el modo que quieras:**  
 
    ```bash
