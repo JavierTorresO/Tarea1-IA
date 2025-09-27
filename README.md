@@ -13,7 +13,7 @@ Incluye distintos modos: control manual, búsqueda A* y búsqueda mediante algor
 | 🔑 | Llave |
 | 🚪 | Salidas |
 
-*(a lo mejor los emojis varian o no se ven según la consola, pero la idea es esa).*  
+*(a lo mejor los emojis se ven algo distintos o no se ven según la consola, pero la idea es la de esta tabla).*  
 
 ## 📂 Archivos principales  
 
@@ -35,16 +35,16 @@ Incluye distintos modos: control manual, búsqueda A* y búsqueda mediante algor
 1. **Clonar el repositorio o descárgalo:**  
 
    ```bash
-   git clone https://github.com/tuusuario/turepo.git
-   cd turepo
+   git clone https://github.com/JavierTorresO/Tarea1-IA.git
+   cd Tarea1-IA
 2. **Ejecuta el modo que quieras:**  
 
    ```bash
    python prueba_agente.py
    python prueba_algoritmo_a.py
    python test_visual_genetico.py
-   python benchmark_a.py
-   python benchmark_genetico.py
+   python benchmark_a_estrella.py
+   python benchmark_a_genetico.py
 3. **Parámetros configurables en benchmarks:**  
 
    Edita dentro del archivo los valores de "prob_muro"(densidad de muros que se generan), "tam"(tamaño del laberinto) y "repeticiones" para ajustar las pruebas que se quieran hacer.
@@ -54,13 +54,13 @@ Incluye distintos modos: control manual, búsqueda A* y búsqueda mediante algor
 
    Aunque en nuestras pruebas estos parametros se mantuvieron en los valores por defecto, si se quiere se pueden modificar dentro del codigo:
    
-    Punto de inicio del agente en celda (0, 0). ->
+    -##Punto de inicio del agente en celda (0, 0).## -> según el modo que se eligió hay que identificar el comando "lab.colocar_inicio(0, 0)" y poner otras coordenadas
 
-    Número mínimo y máximo de salidas generadas en el laberinto (2 y 5). ->
-    
-    Probabilidad de que se muevan los muros en el laberinto está en 0.2. ->
-    
-    Un radio seguro en la generación inicial del laberinto fue 1 (garantiza un área libre alrededor del inicio). ->
-    
+    -##Número mínimo y máximo de salidas generadas en el laberinto (2 y 5).## -> según el modo que se eligió hay que identificar el comando "lab.generar_salidas_aleatorias(min_salidas=2, max_salidas=5)" y poner otros valores para esa prueba
+
+
+    -##Probabilidad de que se muevan los muros en el laberinto está en 0.2.## -> en el archivo "laberinto.py" ir a la función "mover_muros(self, prob_mover)" y cambiar el valor de 'prob_mover'
+
+    -##Radio seguro en la generación inicial del laberinto fue 1 (garantiza un área libre alrededor del inicio).## ->en el archivo "laberinto.py" ir a la función "generar_muros_aleatorios(self,probabilidad,radio_seguro)" y cambiar el valor de 'radio_seguro'    
     La generación de llaves y salidas siempre fue aleatoria. 
    
