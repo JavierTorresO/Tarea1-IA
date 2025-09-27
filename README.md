@@ -1,39 +1,78 @@
-# Tarea1-IA
-Escape del laberinto mutante
+#Juego del Laberinto con Agente
+
+Este proyecto implementa un juego/laberinto donde un agente debe encontrar la salida sorteando muros y recogiendo llaves. Incluye distintos modos: control manual, búsqueda A* y búsqueda mediante algoritmo genético.
+
+🎮 Elementos del juego
+Emoji	Significado
+🟩	Casilla libre
+⬛	Muro
+🚶	Agente
+🔑	Llave
+🚪	Salida verdadera
+🚫	Salida falsa
+
+(Los emojis pueden variar según tu consola, pero la idea es esa).
+
+📂 Archivos principales
+
+prueba_agente.py
+Permite jugar manualmente con el agente usando las teclas W, A, S, D para moverte, recoger llaves y probar puertas.
+
+prueba_algoritmo_a.py
+Crea un ejemplo donde el agente se mueve automáticamente usando el algoritmo A*.
+
+test_visual_genetico.py
+Crea un ejemplo donde el agente se mueve automáticamente usando el algoritmo genético.
+
+Modos Benchmark
+Scripts para automatizar y correr varias pruebas de cada algoritmo con un tamaño de laberinto y una probabilidad de muro configurables. Ideales para medir rendimiento y pasos.
+
+⚙️ Instrucciones de uso en Windows
+
+Clona este repositorio o descárgalo:
+
+git clone https://github.com/tuusuario/turepo.git
+cd turepo
 
 
-1️⃣ Laberinto y Agente
+Instala dependencias (si tienes un requirements.txt):
+
+pip install -r requirements.txt
 
 
-2️⃣Algoritmo de búsqueda (clásico)
+Ejecuta el modo que quieras:
 
-Elegir un algoritmo:
+Modo manual (mover agente)
 
-!!Leer tablero kanban, deje algunas opciones posibles 
+python prueba_agente.py
 
 
-3️⃣Algoritmo Genético
+Ejemplo con A*
 
-Aquí el agente intenta evolucionar caminos posibles:
-Cada camino se representa como un cromosoma: una secuencia de movimientos (arriba, abajo, izquierda, derecha).
-Se define una función de fitness que evalúa qué tan cerca está de la salida real y cuántos muros evita.
-Luego aplicas selección, cruce y mutación para generar caminos mejores generación tras generación.
+python prueba_algoritmo_a.py
 
-*Ventaja: puede adaptarse a laberintos dinámicos y encontrar soluciones incluso si las rutas cambian.
-*Contras: no siempre garantiza la ruta más corta y puede tardar más tiempo en converger.
 
-4️⃣Comparación y Pruebas
+Ejemplo con algoritmo genético
 
-Probar varios escenarios:
+python test_visual_genetico.py
 
-Laberintos pequeños 
-Laberintos grandes 
-Baja y alta probabilidad de movimiento de muros.
 
-Medir:
+Benchmark A* (varias pruebas)
 
-Calidad: ¿llegó a la salida real? ¿camino más corto?
-Robustez: ¿funciona cuando cambian los muros?
-Tiempo: mide time.perf_counter() antes y después de cada algoritmo.
+python benchmark_a.py
 
-Poner resultados en una tabla comparativa.
+
+Benchmark Genético
+
+python benchmark_genetico.py
+
+
+En los benchmarks puedes editar dentro del archivo los parámetros prob_muro, tam y repeticiones para ajustar tus pruebas.
+
+📝 Notas
+
+El inicio del agente siempre está en la posición (0,0).
+
+El número de salidas falsas y verdaderas, así como la colocación de la llave, se generan automáticamente.
+
+El delay se puede poner en 0.0 para acelerar las simulaciones en los benchmarks.
